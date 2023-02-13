@@ -22,7 +22,13 @@ export class AdminController {
     signin() {
         return this.adminService.signin();
     }
-    @Get("/userlist/:id")
+    @Post('/insertuser')
+    @UsePipes(new ValidationPipe())
+    insertUser(@Body() mydto: AdminForm): any {
+        return this.adminService.insertUser(mydto);
+    }
+
+    @Get("/finduser/:id")
     getUserByID(@Param("id", ParseIntPipe) id: number,): any {
         return this.adminService.getUserByID(id);
     }
@@ -56,6 +62,7 @@ export class AdminController {
     }
 
     @Post("/adduser/")
+    @UsePipes(new ValidationPipe())
     addNewUser(
         @Body("id") id: number,
         @Body("name") name: string

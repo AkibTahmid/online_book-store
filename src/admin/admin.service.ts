@@ -29,7 +29,7 @@ export class AdminService {
 
     insertUser(mydto: AdminForm): any {
 
-        return "Admin Inserted name: " + mydto.name + " and userid is " + mydto.id;
+        return "Userid: " + mydto.id + " Password: " + mydto.Password + " Email: " + mydto.email + " Adress: " + mydto.Address;
     }
 
     updateUser(name, id): any {

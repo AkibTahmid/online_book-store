@@ -1,12 +1,19 @@
 
-import { IsInt, IsNotEmpty, Length } from "class-validator";
+import { IsInt, IsNotEmpty, Length, IsEmail, IsString } from "class-validator";
 
 export class AdminForm {
     @IsNotEmpty({ message: "Please enter your id" })
-    @IsInt()
-    id: number;
+    @IsString()
+    id: string;
 
     @IsNotEmpty()
-    @Length(3, 8)
-    name: string;
+    @IsInt()
+    Password: string;
+
+    @IsEmail()
+    email: string;
+
+    @IsString()
+    Address: string;
+
 }
