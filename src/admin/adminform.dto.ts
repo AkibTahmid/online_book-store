@@ -2,7 +2,7 @@
 import { IsInt, IsNotEmpty, Length, IsEmail, IsString } from "class-validator";
 
 export class AdminForm {
-    @IsNotEmpty({ message: "Please enter your id" })
+    @IsNotEmpty({ message: "Your ID is must to complete Registration" })
     @IsString()
     id: string;
 
