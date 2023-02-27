@@ -2,14 +2,17 @@ import { Controller, Post, Get, Put, Delete, Param, Query, Body, ParseIntPipe, U
 import { AdminService } from "./admin.service";
 import { AdminForm } from "./adminform.dto";
 import { v4 as uuid } from "uuid"
+import { EmployeeForm } from 'src/employee/employee.dto';
+import { EmployeeService } from 'src/employee/employee.service';
+import { AdminFormUpdate } from './adminformupdate.dto';
 
 
 
 @Controller('admin')
 export class AdminController {
-    constructor(private adminService: AdminService) { }
+    constructor(private adminService: AdminService, private employeeService: EmployeeService) { }
 
-    @Get("/panel")
+    @Get("/index")
     getAdmin(): any {
         return this.adminService.getIndex();
     }
@@ -28,47 +31,52 @@ export class AdminController {
         return this.adminService.insertUser(mydto);
     }
 
-    @Get("/finduser/:id")
-    getUserByID(@Param("id", ParseIntPipe) id: number,): any {
+    @Get("/findadmin/:id")
+    getAdminByID(@Param("id", ParseIntPipe) id: number,): any {
         return this.adminService.getUserByID(id);
     }
-    @Get("/finduser")
+    @Get("/findadmin")
     getUserByIDName(@Query() qry: any): any {
         return this.adminService.getUserByIDName(qry);
     }
 
-    @Put("/updateuser/")
+    @Put("/updateadmin/")
     @UsePipes(new ValidationPipe())
-    updateUser(
-        @Body("name") name: string,
-        @Body("id") id: number
-    ): any {
+    updateAdmin(@Body('name') name: string, @Body('id') id: number): any {
         return this.adminService.updateUser(name, id);
     }
 
     @Put("/updateuser/:id")
-    updateUserbyid(
-        @Body("name") name: string,
-        @Param("id", ParseIntPipe) id: number
+    @UsePipes(new ValidationPipe())
+    updateAdminbyid(
+        @Body() mydto: AdminFormUpdate,
+        @Param('id', ParseIntPipe) id: number,
     ): any {
-        return this.adminService.updateUserbyid(name, id);
+        return this.adminService.updateUserbyid(mydto, id);
     }
 
     @Delete("/deleteuser/:id")
-    deleteUserbyid(
-        @Param("id", ParseIntPipe) id: number
-    ): any {
+    deleteAdminbyid(@Param('id', ParseIntPipe) id: number): any {
         return this.adminService.deleteUserbyid(id);
+
     }
 
-    @Post("/adduser/")
+
+    @Post("/instertemployee/")
     @UsePipes(new ValidationPipe())
-    addNewUser(
-        @Body("id") id: number,
-        @Body("name") name: string
-    ): any {
-        return this.adminService.addNewUser(id, name);
+    insertEmployee(@Body() employeedto: EmployeeForm): any {
+        return this.employeeService.insertEmployee(employeedto);
     }
+
+    // @Get('/findemployeesbyadmin/:id')
+    // getEmployeeByAdminID(@Param('id', ParseIntPipe) id: number): any {
+    //     return this.adminService.getEmployeesByAdminID(id);
+    // }
+
+    // @Get('/findadminbyemployee/:id')
+    // getAdminByEmployeeID(@Param('id', ParseIntPipe) id: number): any {
+    //     return this.employeeService.getAdminByEmployeeID(id);
+    // }
 
 }
 

@@ -2,18 +2,20 @@
 import { IsInt, IsNotEmpty, Length, IsEmail, IsString } from "class-validator";
 
 export class AdminForm {
-    @IsNotEmpty({ message: "Your ID is must to complete Registration" })
+    @IsNotEmpty({ message: "Your Name is must to complete Registration" })
     @IsString()
-    id: string;
+    name: string;
 
-    @IsNotEmpty()
+    @IsNotEmpty({ message: "Password Required" })
     @IsInt()
-    Password: string;
+    password: string;
 
+    @IsNotEmpty({ message: "Email is must to complete Registration" })
     @IsEmail()
     email: string;
 
+    @IsNotEmpty({ message: "Address is must to complete Registration" })
     @IsString()
-    Address: string;
+    address: string;
 
 }

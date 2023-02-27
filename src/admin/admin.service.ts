@@ -1,13 +1,22 @@
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from '@nestjs/typeorm';
 import { AdminForm } from "./adminform.dto";
+import { Repository } from 'typeorm';
+import { AdminEntity } from "./admin.entity";
+import { AdminFormUpdate } from "./adminformupdate.dto";
 
 
 @Injectable({})
 
 export class AdminService {
 
-    getIndex(): string {
-        return "Admin Panel";
+    constructor(
+        @InjectRepository(AdminEntity)
+        private adminRepo: Repository<AdminEntity>,
+    ) { }
+
+    getIndex(): any {
+        return this.adminRepo.find();;
 
     }
     signup() {
@@ -18,32 +27,49 @@ export class AdminService {
     }
     getUserByID(id): any {
 
-        return "UserID is " + id;
+        return this.adminRepo.findOneBy({ id });
     }
     getUserByIDName(qry): any {
 
         id: Number
         name: String
-        return "UserID is " + qry.id + " and UserName is " + qry.name;
+        return this.adminRepo.findOneBy({ id: qry.id, name: qry.name });
     }
 
     insertUser(mydto: AdminForm): any {
 
-        return "Userid: " + mydto.id + " Password: " + mydto.Password + " Email: " + mydto.email + " Adress: " + mydto.Address;
+        const adminaccount = new AdminEntity()
+        adminaccount.name = mydto.name;
+        adminaccount.email = mydto.email;
+        adminaccount.password = mydto.password;
+        adminaccount.address = mydto.address;
+        return this.adminRepo.save(adminaccount);
     }
 
     updateUser(name, id): any {
-        return "Admin updated name: " + name + " and userid is " + id;
+        console.log(name + id);
+        return this.adminRepo.update(id, { name: name });
     }
-    updateUserbyid(name, id): any {
-        return "Update user where id " + id + " and change name to " + name;
+
+    updateUserbyid(mydto: AdminFormUpdate, id): any {
+        return this.adminRepo.update(id, mydto);
     }
+
     deleteUserbyid(id): any {
 
-        return "Delete userid is " + id;
+        return this.adminRepo.delete(id);
     }
+
     addNewUser(id, name): any {
         return "User with id " + id + " & name " + name + " added"
     }
 
+    //getEmployeesByAdminID(id): any {
+    //   return this.adminRepo.find({
+    //   where: { id: id },
+    //   relations: {
+    //       employees: true,
+    //    },
+    // });
+    // }
 }
