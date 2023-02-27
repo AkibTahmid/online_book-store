@@ -25,7 +25,7 @@ export class AdminController {
     signin() {
         return this.adminService.signin();
     }
-    @Post('/insertuser')
+    @Post('/insertadmin')
     @UsePipes(new ValidationPipe())
     insertUser(@Body() mydto: AdminForm): any {
         return this.adminService.insertUser(mydto);
@@ -46,7 +46,7 @@ export class AdminController {
         return this.adminService.updateUser(name, id);
     }
 
-    @Put("/updateuser/:id")
+    @Put("/updateadmin/:id")
     @UsePipes(new ValidationPipe())
     updateAdminbyid(
         @Body() mydto: AdminFormUpdate,
@@ -55,7 +55,7 @@ export class AdminController {
         return this.adminService.updateUserbyid(mydto, id);
     }
 
-    @Delete("/deleteuser/:id")
+    @Delete("/deleteadmin/:id")
     deleteAdminbyid(@Param('id', ParseIntPipe) id: number): any {
         return this.adminService.deleteUserbyid(id);
 
