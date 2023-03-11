@@ -18,4 +18,8 @@ export class AdminForm {
     @IsString()
     address: string;
 
+    @IsNotEmpty({ message: "File is must to complete Registration" })
+    @IsString()
+    filename: string;
+
 }

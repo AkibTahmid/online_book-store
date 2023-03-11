@@ -17,14 +17,15 @@ export class EmployeeService {
 
         return this.employeeRepo.save(mydto);
     }
-    //getAdminByEmployeeID(id): any {
-    //return this.employeeRepo.find({
-    // where: { id: id },
-    // relations: {
-    //    admin: true,
-    //    },
-    //  });
-    //}
+    getAdminByEmployeeID(id): any {
+        return this.employeeRepo.find({
+            where: { id: id },
+            relations: {
+                admin: true,
+            },
+        });
+    }
+
 
 
 }

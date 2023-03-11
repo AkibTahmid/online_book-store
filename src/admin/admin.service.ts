@@ -4,6 +4,8 @@ import { AdminForm } from "./adminform.dto";
 import { Repository } from 'typeorm';
 import { AdminEntity } from "./admin.entity";
 import { AdminFormUpdate } from "./adminformupdate.dto";
+import { MailerService } from "@nestjs-modules/mailer/dist";
+import * as bcrypt from 'bcrypt';
 
 
 @Injectable({})
@@ -13,17 +15,12 @@ export class AdminService {
     constructor(
         @InjectRepository(AdminEntity)
         private adminRepo: Repository<AdminEntity>,
+        private mailerService: MailerService
     ) { }
 
     getIndex(): any {
         return this.adminRepo.find();;
 
-    }
-    signup() {
-        return 'I am Signed Up';
-    }
-    signin() {
-        return 'I am Signed in';
     }
     getUserByID(id): any {
 
@@ -43,12 +40,12 @@ export class AdminService {
         adminaccount.email = mydto.email;
         adminaccount.password = mydto.password;
         adminaccount.address = mydto.address;
+        // adminaccount.filename = mydto.filename;
         return this.adminRepo.save(adminaccount);
     }
 
-    updateUser(name, id): any {
-        console.log(name + id);
-        return this.adminRepo.update(id, { name: name });
+    updateUser(name, email): any {
+        return this.adminRepo.update({ email: email }, { name: name });
     }
 
     updateUserbyid(mydto: AdminFormUpdate, id): any {
@@ -64,12 +61,41 @@ export class AdminService {
         return "User with id " + id + " & name " + name + " added"
     }
 
-    //getEmployeesByAdminID(id): any {
-    //   return this.adminRepo.find({
-    //   where: { id: id },
-    //   relations: {
-    //       employees: true,
-    //    },
-    // });
-    // }
+    getEmployeesByAdminID(id): any {
+        return this.adminRepo.find({
+            where: { id: id },
+            relations: {
+                employees: true,
+            },
+        });
+    }
+
+    async signup(mydto) {
+        const salt = await bcrypt.genSalt();
+        const hassedpassed = await bcrypt.hash(mydto.password, salt);
+        mydto.password = hassedpassed;
+        return this.adminRepo.save(mydto);
+    }
+
+    async signin(mydto) {
+        console.log(mydto.password);
+        const mydata = await this.adminRepo.findOneBy({ email: mydto.email });
+        const isMatch = await bcrypt.compare(mydto.password, mydata.password);
+        if (isMatch) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+
+    }
+
+    async sendEmail(mydata) {
+        return await this.mailerService.sendMail({
+            to: mydata.email,
+            subject: mydata.subject,
+            text: mydata.text,
+        });
+
+    }
 }

@@ -18,8 +18,11 @@ export class AdminEntity {
     @Column()
     address: string;
 
-    //@OneToMany(() => EmployeeEntity, (employee) => employee.admin)
-    //employees: EmployeeEntity[]
+    @Column()
+    filename: string;
+
+    @OneToMany(() => EmployeeEntity, (employee) => employee.admin)
+    employees: EmployeeEntity[]
 
 
 }

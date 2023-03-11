@@ -5,11 +5,24 @@ import { AdminController } from "./admin.controller";
 import { AdminService } from "./admin.service";
 import { EmployeeService } from "src/employee/employee.service";
 import { EmployeeEntity } from "src/employee/employee.entity";
+import { MailerModule } from "@nestjs-modules/mailer";
 
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([AdminEntity, EmployeeEntity])],
+    imports: [MailerModule.forRoot({
+        transport: {
+            host: 'smtp.gmail.com',
+            port: 465,
+            ignoreTLS: true,
+            secure: true,
+            auth: {
+                user: 'Please Type Your Email address',
+                pass: 'Please Type Your password'
+            },
+        }
+    }),
+    TypeOrmModule.forFeature([AdminEntity, EmployeeEntity])],
     controllers: [AdminController],
     providers: [AdminService, EmployeeService]
 })

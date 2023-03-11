@@ -18,7 +18,7 @@ export class EmployeeEntity {
     @Column()
     address: string;
 
-    //@ManyToOne(() => AdminEntity, (admin) => admin.employees)
-    //admin: AdminEntity
+    @ManyToOne(() => AdminEntity, (admin) => admin.employees)
+    admin: AdminEntity
 
 }

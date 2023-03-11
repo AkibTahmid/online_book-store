@@ -13,7 +13,7 @@ import { EmployeeModule } from './employee/employee.module'
       port: 5432,
       username: 'postgres',
       password: 'root',
-      database: 'OBSMS',
+      database: 'OBSMS1',
       autoLoadEntities: true,
       synchronize: true,
     }
