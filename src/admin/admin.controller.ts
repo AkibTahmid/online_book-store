@@ -103,7 +103,7 @@ export class AdminController {
             session.email = mydto.email;
 
             console.log(session.email);
-            return { message: "Successful" };
+            return { message: "Successfully Logged In" };
 
         }
         else {
