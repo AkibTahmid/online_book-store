@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Post, Put, Query, UploadedFile, UseInterceptors, UsePipes, ValidationPipe, Session, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Post, Put, Query, UploadedFile, UseInterceptors, UsePipes, ValidationPipe, Session, UseGuards, Res, Header, HttpCode } from "@nestjs/common";
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -74,6 +74,10 @@ export class AdminController {
     getAdminByEmployeeID(@Param('id', ParseIntPipe) id: number): any {
         return this.employeeService.getAdminByEmployeeID(id);
     }
+    @Get('/getimage/:name')
+    getImages(@Param('name') name, @Res() res) {
+        res.sendFile(name, { root: './uploads' })
+    }
     @Post('/signup')
     @UseInterceptors(FileInterceptor('image',
         {
@@ -93,23 +97,20 @@ export class AdminController {
     }),) file: Express.Multer.File) {
 
         mydto.filename = file.filename;
-
+        console.log(mydto)
         return this.adminService.signup(mydto);
-        console.log(file)
     }
-    @Get('/signin')
-    signin(@Session() session, @Body() mydto: AdminForm) {
-        if (this.adminService.signin(mydto)) {
+    @Post('/signin')
+    @UsePipes(new ValidationPipe())
+    async signin(@Session() session, @Body() mydto: AdminForm) {
+        const res = await (this.adminService.signin(mydto));
+        if (res == true) {
             session.email = mydto.email;
-
-            console.log(session.email);
-            return { message: "Successfully Logged In" };
-
+            return (session.email);
         }
         else {
-            return { message: "Invalid Credentials" };
+            throw new UnauthorizedException({ message: "invalid credentials" });
         }
-
     }
     @Get('/signout')
     signout(@Session() session) {
