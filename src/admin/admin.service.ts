@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, HttpStatus, HttpException } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { AdminForm } from "./adminform.dto";
 import { Repository } from 'typeorm';
@@ -6,6 +6,7 @@ import { AdminEntity } from "./admin.entity";
 import { AdminFormUpdate } from "./adminformupdate.dto";
 import { MailerService } from "@nestjs-modules/mailer/dist";
 import * as bcrypt from 'bcrypt';
+
 
 
 @Injectable({})
@@ -22,26 +23,27 @@ export class AdminService {
         return this.adminRepo.find();;
 
     }
-    getUserByID(id): any {
+    async getUserByID(id) {
 
-        return this.adminRepo.findOneBy({ id });
+        const data = await this.adminRepo.findOneBy({ id });
+        console.log(data);
+        if (data !== null) {
+            return data;
+        }
+        else {
+            throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+        }
     }
     getUserByIDName(qry): any {
 
-        id: Number
-        name: String
         return this.adminRepo.findOneBy({ id: qry.id, name: qry.name });
     }
 
-    insertUser(mydto: AdminForm): any {
-
-        const adminaccount = new AdminEntity()
-        adminaccount.name = mydto.name;
-        adminaccount.email = mydto.email;
-        adminaccount.password = mydto.password;
-        adminaccount.address = mydto.address;
-        // adminaccount.filename = mydto.filename;
-        return this.adminRepo.save(adminaccount);
+    async insertUser(mydto) {
+        const salt = await bcrypt.genSalt();
+        const hassedpassed = await bcrypt.hash(mydto.password, salt);
+        mydto.password = hassedpassed;
+        return this.adminRepo.save(mydto);
     }
 
     updateUser(name, email): any {
@@ -78,14 +80,18 @@ export class AdminService {
     }
 
     async signin(mydto) {
-        console.log(mydto.password);
-        const mydata = await this.adminRepo.findOneBy({ email: mydto.email });
-        const isMatch = await bcrypt.compare(mydto.password, mydata.password);
-        if (isMatch) {
-            return 1;
-        }
-        else {
-            return 0;
+
+        if (mydto.email != null && mydto.password != null) {
+            const mydata = await this.adminRepo.findOneBy({ email: mydto.email });
+            const isMatch = await bcrypt.compare(mydto.password, mydata.password);
+            if (isMatch) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        } else {
+            return false;
         }
 
     }

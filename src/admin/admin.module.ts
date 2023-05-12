@@ -18,7 +18,7 @@ import { MailerModule } from "@nestjs-modules/mailer";
             secure: true,
             auth: {
                 user: 'akib.tahmid19@gmail.com',
-                pass: 'xxsjqxjfgodebueo'
+                pass: 'your app password'
             },
         }
     }),
