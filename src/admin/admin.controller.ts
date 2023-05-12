@@ -9,6 +9,7 @@ import { v4 as uuid } from "uuid"
 import { EmployeeForm } from 'src/employee/employee.dto';
 import { EmployeeService } from 'src/employee/employee.service';
 import { AdminFormUpdate } from './adminformupdate.dto';
+import { SigninForm } from "./signindto";
 
 
 
@@ -102,7 +103,7 @@ export class AdminController {
     }
     @Post('/signin')
     @UsePipes(new ValidationPipe())
-    async signin(@Session() session, @Body() mydto: AdminForm) {
+    async signin(@Session() session, @Body() mydto: SigninForm) {
         const res = await (this.adminService.signin(mydto));
         if (res == true) {
             session.email = mydto.email;
