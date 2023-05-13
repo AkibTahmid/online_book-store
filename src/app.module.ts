@@ -4,11 +4,12 @@ import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EmployeeModule } from './employee/employee.module'
+import { BookModule } from './book/book.module'
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
 @Module({
-  imports: [AdminModule, EmployeeModule, TypeOrmModule.forRoot(
+  imports: [AdminModule, EmployeeModule, BookModule, TypeOrmModule.forRoot(
     {
       type: 'postgres',
       host: 'localhost',

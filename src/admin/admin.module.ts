@@ -5,6 +5,8 @@ import { AdminController } from "./admin.controller";
 import { AdminService } from "./admin.service";
 import { EmployeeService } from "src/employee/employee.service";
 import { EmployeeEntity } from "src/employee/employee.entity";
+import { BookService } from "src/book/book.service";
+import { BookEntity } from "src/book/book.entity";
 import { MailerModule } from "@nestjs-modules/mailer";
 
 
@@ -22,9 +24,9 @@ import { MailerModule } from "@nestjs-modules/mailer";
             },
         }
     }),
-    TypeOrmModule.forFeature([AdminEntity, EmployeeEntity])],
+    TypeOrmModule.forFeature([AdminEntity, EmployeeEntity, BookEntity])],
     controllers: [AdminController],
-    providers: [AdminService, EmployeeService]
+    providers: [AdminService, EmployeeService, BookService]
 })
 export class AdminModule {
 

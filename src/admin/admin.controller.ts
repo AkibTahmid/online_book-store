@@ -10,21 +10,50 @@ import { EmployeeForm } from 'src/employee/employee.dto';
 import { EmployeeService } from 'src/employee/employee.service';
 import { AdminFormUpdate } from './adminformupdate.dto';
 import { SigninForm } from "./signindto";
-
+import { BookForm } from "src/book/book.dto";
+import { BookEntity } from "src/book/book.entity";
+import { BookService } from "src/book/book.service";
 
 
 @Controller('admin')
 export class AdminController {
-    constructor(private adminService: AdminService, private employeeService: EmployeeService) { }
+    constructor(private adminService: AdminService, private employeeService: EmployeeService, private bookService: BookService) { }
 
     @Get("/index")
     getAdmin(): any {
         return this.adminService.getIndex();
     }
+
+    @Get("/employee/index")
+    getEmployee(): any {
+        return this.employeeService.getIndex();
+    }
+
+    @Get("/book/index")
+    getBook(): any {
+        return this.bookService.getIndex();
+    }
+
     @Post('/insertadmin')
     @UsePipes(new ValidationPipe())
     insertUser(@Body() mydto: AdminForm): any {
         return this.adminService.insertUser(mydto);
+    }
+
+    @Post('/book/insertbook')
+    @UsePipes(new ValidationPipe())
+    insertBook(@Body() mydto: BookForm): any {
+        return this.bookService.addBook(mydto);
+    }
+
+    @Get("/book/findbook/:id")
+    getBookByID(@Param("id", ParseIntPipe) id: number,): any {
+        return this.bookService.getBookByID(id);
+    }
+
+    @Get("employee/findemployee/:id")
+    getEmployeeByID(@Param("id", ParseIntPipe) id: number,): any {
+        return this.employeeService.getEmployeeByID(id);
     }
 
     @Get("/findadmin/:id")
